@@ -146,7 +146,7 @@
 			});
 			
 			field.find(".images-add-button").on("click", function(e) {
-			  event.stopPropagation();
+			  e.stopPropagation();
 			  field.find(".images-dropdown").toggleClass("open");
 			  field.find(".images-add-button").toggleClass("open");
 			  field.find("input.filter").focus();
