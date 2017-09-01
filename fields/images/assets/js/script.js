@@ -62,6 +62,16 @@
 	        }
 	    });
 			
+			function checkLimit() {
+				limit = field.data("limit");
+				if (field.find(".images-item.selected").length >= limit) {
+				  field.addClass("limit-reached");
+				}
+				else {
+				  field.removeClass("limit-reached");
+				}
+			}
+			checkLimit();
 			
 			function noover() {
 			  field.find(".add").removeClass("over");
@@ -86,6 +96,8 @@
 			  else {
 			    field.find('.images-dropdown .no-more-images').addClass("da");
 			  }
+			  
+			  checkLimit();
 			  
 			};
 			
@@ -150,11 +162,13 @@
 			});
 			
 			field.find(".images-dropdown a").on("click", function(e) {
-			  field.find("input.filter").val("");
-			  field.find("input.filter").trigger("change");
-		    select($(this).find(".image").text());
-		    field.find(".images-dropdown").removeClass("open");
-		    field.find(".images-add-button").removeClass("open");
+			  if (!field.hasClass("limit-reached")) {
+  			  field.find("input.filter").val("");
+  			  field.find("input.filter").trigger("change");
+  		    select($(this).find(".image").text());
+  		    field.find(".images-dropdown").removeClass("open");
+  		    field.find(".images-add-button").removeClass("open");
+			  }
 			});
 						
 			var files    = field.find('.imagesgrid');
@@ -190,36 +204,40 @@
 			    field.find(".add").removeClass("over");
 			    field.find(".images-item").removeClass("over");
 			    var droppedImage = ui.draggable.data('helper');
-			    if (ui.draggable.hasClass("images-item")) {
-			      otherField = ui.draggable.closest(".field-with-images");			      
-			      otherField.find(".images-dropdown a[data-filename='" + droppedImage + "']").removeClass("disabled");
-			      if (otherField.find(".selected").length <= 2) {
-		          otherField.find(".imagesgrid").removeClass("filled");
-		        }
-		        ui.draggable.removeClass("selected");
-		        
-		        otherField.find("input.images").val("");
-		        if (otherField.find(".images-item.selected").length > 1) {
-		          filenames = new Array();
-		          otherField.find(".images-item.selected").each(function() {
-		            filenames.push($(this).data("image"));
-		          });
-		          filenames = "- " + filenames.join("\n- ");
-		          
-		          otherField.find("input.images").val(filenames);
-		        }
-		        else {
-		          otherField.find("input.images").val(otherField.find(".images-item.selected").data("image"));
-		        }
-		        otherField.closest('form').trigger('keep');
-		        
-				  }
-		      select(droppedImage);
+			    
+			    if (!field.hasClass("limit-reached")) {
+  			    if (ui.draggable.hasClass("images-item")) {
+  			      otherField = ui.draggable.closest(".field-with-images");			      
+  			      otherField.find(".images-dropdown a[data-filename='" + droppedImage + "']").removeClass("disabled");
+  			      if (otherField.find(".selected").length <= 2) {
+  		          otherField.find(".imagesgrid").removeClass("filled");
+  		        }
+  		        ui.draggable.removeClass("selected");
+  		        
+  		        otherField.find("input.images").val("");
+  		        if (otherField.find(".images-item.selected").length > 1) {
+  		          filenames = new Array();
+  		          otherField.find(".images-item.selected").each(function() {
+  		            filenames.push($(this).data("image"));
+  		          });
+  		          filenames = "- " + filenames.join("\n- ");
+  		          
+  		          otherField.find("input.images").val(filenames);
+  		        }
+  		        else {
+  		          otherField.find("input.images").val(otherField.find(".images-item.selected").data("image"));
+  		        }
+  		        otherField.closest('form').trigger('keep');
+  		        
+  				  }
+  		      select(droppedImage);
+  		    }
 			  },
 			  over: function(e, ui) {
-			    field.find(".imagesgrid").addClass("filled");
 			    var droppableImage = field.find(".images-item[data-image='" + ui.draggable.data('helper') + "']");
-			    if (droppableImage.hasClass("selected")) {
+			    if (field.hasClass("limit-reached")) {
+			    }
+			    else if (droppableImage.hasClass("selected")) {
 			      droppableImage.addClass("over");
 			    }
 			    else {
@@ -236,6 +254,7 @@
 			      field.find(".add .inner").height(height);
 			      field.find(".add").addClass("over");
 			    }
+			    field.find(".imagesgrid").addClass("filled");
 			  },
 			  out: function(e, ui) {
 			    noover();

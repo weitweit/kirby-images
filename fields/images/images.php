@@ -24,6 +24,7 @@ class imagesField extends BaseField {
 	public function element() {
 		$element = parent::element();
 		$element->data('field', self::$fieldname);
+		$element->data('limit', $this->limit());
 		$element->addClass('field-with-images');
 		return $element;
 	}

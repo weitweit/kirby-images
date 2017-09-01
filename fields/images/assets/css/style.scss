@@ -6,9 +6,10 @@
       color: black;
     }
   }
+  &.limit-reached .images-add-button {
+    display: none;
+  }
   
-    
-   
   .images-dropdown {
     display: none;
     background: white;
