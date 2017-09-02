@@ -63,13 +63,21 @@
 	    });
 			
 			function checkLimit() {
-				limit = field.data("limit");
-				if (field.find(".images-item.selected").length >= limit) {
-				  field.addClass("limit-reached");
+				
+				if (field.data("limit")) {
+				  var imagesLimit = field.data("limit");
+				  var imagesCount = field.find(".images-item.selected").length;
+				  
+				  field.find(".images-limit").html("(" + imagesCount + "/" + imagesLimit + ")");
+				  
+				  if (imagesCount >= imagesLimit) {
+				    field.addClass("limit-reached");
+				  }
+				  else {
+				    field.removeClass("limit-reached");
+				  }
 				}
-				else {
-				  field.removeClass("limit-reached");
-				}
+				
 			}
 			checkLimit();
 			

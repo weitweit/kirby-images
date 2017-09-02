@@ -9,6 +9,10 @@
   &.limit-reached .images-add-button {
     display: none;
   }
+  .images-limit {
+    font-weight: 400;
+    color: #777;
+  }
   
   .images-dropdown {
     display: none;

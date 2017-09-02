@@ -40,7 +40,6 @@ class imagesField extends BaseField {
   
   public function headline() {
     
-    
     $select = '<div class="images-dropdown">';
     if ($this->page()->hasImages()) {
       $select .= '<div class="filter-wrap">';
@@ -71,7 +70,12 @@ class imagesField extends BaseField {
       $this->label = '&nbsp;';
     }
     
+    if (isset($this->limit)) {
+      $this->label =  $this->label . ' <span class="images-limit">' . '(1/3)' . '</span>';
+    }
+    
     $label = parent::label();
+    
     $label->addClass('images-label');
     $label->append($add);
     $label->append($select);
