@@ -25,6 +25,7 @@ class imagesField extends BaseField {
 		$element = parent::element();
 		$element->data('field', self::$fieldname);
 		$element->data('limit', $this->limit());
+		$element->data('parents', $this->parents());
 		$element->addClass('field-with-images');
 		return $element;
 	}
@@ -59,6 +60,17 @@ class imagesField extends BaseField {
       $select .= $image->crop(75,75)->html();
       $select .= '<span class="image">' . $image->filename() . '</span>';
       $select .= '</a>';
+    }
+
+    if ($this->parents==true) {
+      foreach ($this->page()->parent()->images() as $image) {
+        $disabled = "";
+        if (in_array($image->filename(), $this->value())) $disabled = "disabled";
+        $select .= '<a class="' . $disabled . '" data-filename="parent:' . $image->filename() . '">';
+        $select .= $image->crop(75,75)->html();
+        $select .= '<span class="image">' . $image->filename() . '</span>';
+        $select .= '</a>';
+      }
     }
     $select .= "</div>";
     

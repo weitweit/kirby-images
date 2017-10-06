@@ -15,7 +15,13 @@
   foreach ($page->images() as $image) {
     $pageImages[] = $image->filename();
   }
-  
+
+  if ($field->parents==true) {
+    foreach ($page->parent()->images() as $image) {
+      $pageImages[] = 'parent:'. $image->filename();
+    }
+  }
+
   foreach ($pageImages as $pageImage) {
     if (in_array($pageImage, $fieldImages)) {
       continue;
@@ -35,15 +41,23 @@
     
   <div class="imagesgrid-inner sortable">
       
-     <?php
-       $valueImages = array();
-       foreach($fieldImages as $f):
-       $file = $page->image($f);
-       if (!$file) continue;
-       if(in_array($f, $field->value())) $valueImages[] = $f;
-     ?>
+    <?php
+    $valueImages = array();
+    foreach($fieldImages as $f):
+      $file = $page->image($f);
+
+      $parent_identifier = '';
+      $parent = explode(':', $f);
+      if ($parent[0]==='parent') {
+        $parent_identifier = 'parent:';
+        $file = $page->parent()->image($parent[1]);
+      }
+
+      if (!$file) continue;
+      if(in_array($f, $field->value())) $valueImages[] = $f;
+    ?>
      
-     <div class="images-item <?php e(in_array($file->filename(), $field->value()), 'selected') ?>" data-image="<?php __($file->filename()) ?>" data-helper="<?php __($file->filename()) ?>">
+     <div class="images-item <?php e(in_array($parent_identifier . $file->filename(), $field->value()), 'selected') ?>" data-image="<?= $parent_identifier ?><?php __($file->filename()) ?>" data-helper="<?php __($file->filename()) ?>">
          <figure title="<?php __($file->filename()) ?>" class="images-figure">
            <a class="images-preview images-preview-is-<?php __($file->type()) ?>" href="<?php __($file->url('edit')) ?>">
              <img src="<?php __($file->crop(400, 266)->url()) ?>" alt="<?php __($file->filename()) ?>">

@@ -173,7 +173,7 @@
 			  if (!field.hasClass("limit-reached")) {
   			  field.find("input.filter").val("");
   			  field.find("input.filter").trigger("change");
-  		    select($(this).find(".image").text());
+  		    select($(this).data('filename'));
   		    field.find(".images-dropdown").removeClass("open");
   		    field.find(".images-add-button").removeClass("open");
 			  }
